@@ -38,6 +38,34 @@ describe("Middleware for Hono", () => {
     );
     consoleLogSpy.mockClear();
 
+    const body = JSON.stringify({ name: "John", age: 20 });
+    res = await app.request("/hello", {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": body.length.toString(),
+      },
+    });
+    await res.text();
+    expect(res.status).toBe(200);
+
+    await wait();
+
+    loggedData = await getLoggedData(consoleLogSpy);
+    expect(loggedData).toBeDefined();
+    expect(loggedData.request.path).toBe("/hello");
+    expect(loggedData.request.headers).toHaveLength(2);
+    expect(loggedData.request.headers).toContainEqual([
+      "content-type",
+      "application/json",
+    ]);
+    expect(loggedData.request.size).toBe(body.length);
+    expect(Buffer.from(loggedData.request.body, "base64").toString()).toMatch(
+      /^{"name":"John","age":20}$/,
+    );
+    consoleLogSpy.mockClear();
+
     res = await app.request("/error");
     await res.text();
     expect(res.status).toBe(500);

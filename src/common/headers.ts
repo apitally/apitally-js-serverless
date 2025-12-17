@@ -1,16 +1,15 @@
-import {
-  IncomingHttpHeaders,
-  OutgoingHttpHeader,
-  OutgoingHttpHeaders,
-} from "node:http";
+const SUPPORTED_CONTENT_TYPES = [
+  "application/json",
+  "application/ld+json",
+  "application/problem+json",
+  "application/vnd.api+json",
+  "application/x-ndjson",
+  "text/plain",
+  "text/html",
+];
 
 export function convertHeaders(
-  headers:
-    | Headers
-    | IncomingHttpHeaders
-    | OutgoingHttpHeaders
-    | Record<string, string | string[] | number | undefined>
-    | undefined,
+  headers?: Headers | Record<string, string | string[] | number | undefined>,
 ) {
   if (!headers) {
     return [];
@@ -30,7 +29,7 @@ export function convertHeaders(
 }
 
 export function parseContentLength(
-  contentLength: OutgoingHttpHeader | undefined | null,
+  contentLength?: string | string[] | number | null,
 ): number | undefined {
   if (contentLength === undefined || contentLength === null) {
     return undefined;
@@ -49,18 +48,8 @@ export function parseContentLength(
 }
 
 export function isSupportedContentType(contentType?: string | null) {
-  const ALLOWED_CONTENT_TYPES = [
-    "application/json",
-    "application/ld+json",
-    "application/problem+json",
-    "application/vnd.api+json",
-    "application/x-ndjson",
-    "text/plain",
-    "text/html",
-  ];
-
   return (
     typeof contentType === "string" &&
-    ALLOWED_CONTENT_TYPES.some((t) => contentType.startsWith(t))
+    SUPPORTED_CONTENT_TYPES.some((t) => contentType.startsWith(t))
   );
 }

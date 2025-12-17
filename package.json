@@ -40,19 +40,10 @@
   ],
   "exports": {
     "./hono": {
-      "import": {
-        "types": "./dist/hono/index.d.ts",
-        "default": "./dist/hono/index.js"
-      }
+      "types": "./dist/hono/index.d.ts",
+      "import": "./dist/hono/index.js"
     },
     "./package.json": "./package.json"
-  },
-  "typesVersions": {
-    "*": {
-      "hono": [
-        "./dist/hono/index.d.ts"
-      ]
-    }
   },
   "prettier": {
     "printWidth": 80
