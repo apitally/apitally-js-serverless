@@ -7,12 +7,14 @@ import {
   isSupportedContentType,
   parseContentLength,
 } from "../common/headers.js";
+import DataMasker from "../common/masking.js";
 import { logData } from "../common/output.js";
 import { captureResponse } from "../common/response.js";
 import { getConsumer, listEndpoints, tryWaitUntil } from "./utils.js";
 
 export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
   const mergedConfig = mergeConfigWithDefaults(config);
+  const masker = new DataMasker(mergedConfig);
   let isFirstRequest = true;
   let instanceUuid: string;
 
@@ -35,6 +37,8 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
       const requestContentType = c.req.header("content-type");
       const requestBody =
         mergedConfig.logRequestBody &&
+        requestSize &&
+        requestSize <= 10_000 &&
         isSupportedContentType(requestContentType)
           ? Buffer.from(await c.req.arrayBuffer())
           : undefined;
@@ -43,7 +47,7 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         : undefined;
       const responseBody = capturedResponse.body;
 
-      let startupData: any;
+      let startupData;
       if (isFirstRequest) {
         isFirstRequest = false;
         instanceUuid = crypto.randomUUID();
@@ -52,30 +56,28 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
           client: "js:serverless:hono",
         };
       }
-      const requestData = {
-        path: c.req.routePath,
-        headers: mergedConfig.logRequestHeaders
-          ? convertHeaders(c.req.header())
-          : undefined,
-        size: requestSize,
-        consumer: getConsumer(c),
-        body: requestBody,
-      };
-      const responseData = {
-        responseTime,
-        headers: mergedConfig.logResponseHeaders
-          ? convertHeaders(responseHeaders)
-          : undefined,
-        size: responseSize,
-        body: responseBody,
-      };
-      await logData({
+
+      const data = {
         instanceUuid,
         requestUuid: crypto.randomUUID(),
         startup: startupData,
-        request: requestData,
-        response: responseData,
-      });
+        request: {
+          path: c.req.routePath,
+          headers: convertHeaders(c.req.header()),
+          size: requestSize,
+          consumer: getConsumer(c),
+          body: requestBody,
+        },
+        response: {
+          responseTime,
+          headers: convertHeaders(responseHeaders),
+          size: responseSize,
+          body: responseBody,
+        },
+      };
+
+      masker.applyMasking(data);
+      await logData(data);
     });
 
     tryWaitUntil(c, loggingPromise);

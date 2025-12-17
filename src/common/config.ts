@@ -6,13 +6,7 @@ export type ApitallyConfig = {
   logResponseBody: boolean;
   maskHeaders: RegExp[];
   maskBodyFields: RegExp[];
-  maskRequestBodyCallback?: (request: Request) => Buffer | null | undefined;
-  maskResponseBodyCallback?: (
-    request: Request,
-    response: Response,
-  ) => Buffer | null | undefined;
   excludePaths: RegExp[];
-  excludeCallback?: (request: Request, response: Response) => boolean;
 };
 
 const DEFAULT_CONFIG: ApitallyConfig = {

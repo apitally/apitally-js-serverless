@@ -20,6 +20,7 @@ export type OutputData = {
     size?: number;
     body?: Buffer;
   };
+  exclude?: boolean;
 };
 
 async function gzipBase64(obj: any) {
@@ -37,7 +38,6 @@ async function gzipBase64(obj: any) {
 }
 
 export async function logData(data: OutputData) {
-  // Serialize request and response body to base64
   [data.request?.body, data.response?.body].forEach((body) => {
     if (body) {
       // @ts-expect-error Override Buffer's default JSON serialization
