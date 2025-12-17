@@ -64,7 +64,7 @@ yarn add @apitally/serverless
 
 ## Usage
 
-Our comprehensive [setup guides](https://docs.apitally.io/quickstart) include
+Our comprehensive [setup guides](https://docs.apitally.io/setup-guides) include
 all the details you need to get started.
 
 ### Hono
