@@ -82,7 +82,7 @@ export default class DataMasker {
   }
 
   applyMasking(data: OutputData) {
-    // Exclude if path is excluded
+    // Check if path is excluded
     if (this.shouldExcludePath(data.request.path)) {
       data.request.headers = undefined;
       data.request.body = undefined;
@@ -90,6 +90,14 @@ export default class DataMasker {
       data.response.body = undefined;
       data.exclude = true;
       return;
+    }
+
+    // Drop request and response bodies if logging is disabled
+    if (!this.config.logRequestBody && data.request.body) {
+      data.request.body = undefined;
+    }
+    if (!this.config.logResponseBody && data.response.body) {
+      data.response.body = undefined;
     }
 
     // Mask request and response body fields

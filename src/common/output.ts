@@ -24,21 +24,18 @@ export type OutputData = {
   exclude?: boolean;
 };
 
-async function gzipBase64(obj: any) {
-  const json = JSON.stringify(obj);
+async function gzipBase64(json: string) {
   const encoder = new TextEncoder();
-
   const gzipStream = new CompressionStream("gzip");
   const writer = gzipStream.writable.getWriter();
   writer.write(encoder.encode(json));
   writer.close();
 
   const compressed = await new Response(gzipStream.readable).arrayBuffer();
-
   return btoa(String.fromCharCode(...new Uint8Array(compressed)));
 }
 
-export async function logData(data: OutputData) {
+async function createLogMessage(data: OutputData) {
   [data.request?.body, data.response?.body].forEach((body) => {
     if (body) {
       // @ts-expect-error Override Buffer's default JSON serialization
@@ -48,13 +45,18 @@ export async function logData(data: OutputData) {
     }
   });
 
-  let msg = `apitally:${await gzipBase64(data)}`;
+  const json = JSON.stringify(data);
+  return `apitally:${await gzipBase64(json)}`;
+}
+
+export async function logData(data: OutputData) {
+  let msg = await createLogMessage(data);
   if (msg.length > 15_000) {
     // Cloudflare Workers Logpush limits the total length of all exception and log messages to 16,384 characters,
     // so we need to keep the logged message well below that limit.
     data.request.body = undefined;
     data.response.body = undefined;
-    msg = `apitally:${await gzipBase64(data)}`;
+    msg = await createLogMessage(data);
   }
   console.log(msg);
 }
