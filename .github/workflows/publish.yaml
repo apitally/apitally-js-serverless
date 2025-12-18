@@ -26,9 +26,12 @@ jobs:
         run: npm run check
       - name: Run tests
         run: npm test
+      - name: Update version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/VERSION = \".*\"/VERSION = \"$VERSION\"/" src/common/version.ts
+          npm version from-git --no-git-tag-version
       - name: Build package
         run: npm run build
-      - name: Update version in package.json
-        run: npm version from-git --no-git-tag-version
       - name: Publish to npm
         run: npm publish

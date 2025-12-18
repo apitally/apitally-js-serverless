@@ -10,6 +10,7 @@ import {
 import DataMasker from "../common/masking.js";
 import { logData } from "../common/output.js";
 import { captureResponse } from "../common/response.js";
+import { VERSION } from "../common/version.js";
 import { getConsumer, listEndpoints, tryWaitUntil } from "./utils.js";
 
 export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
@@ -38,9 +39,10 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
       const requestBody =
         mergedConfig.logRequestBody &&
         requestSize &&
-        requestSize <= 10_000 &&
         isSupportedContentType(requestContentType)
-          ? Buffer.from(await c.req.arrayBuffer())
+          ? requestSize <= 10_000
+            ? Buffer.from(await c.req.arrayBuffer())
+            : Buffer.from("<body too large>")
           : undefined;
       const responseSize = capturedResponse.completed
         ? capturedResponse.size
@@ -53,7 +55,10 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         instanceUuid = crypto.randomUUID();
         startupData = {
           paths: listEndpoints(app),
-          client: "js:serverless:hono",
+          client: "js-serverless:hono",
+          versions: {
+            "@apitally/serverless": VERSION,
+          },
         };
       }
 

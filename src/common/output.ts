@@ -5,6 +5,7 @@ export type OutputData = {
   requestUuid: string;
   startup?: {
     paths: { method: string; path: string }[];
+    versions: Record<string, string>;
     client: string;
   };
   request: {
@@ -47,5 +48,13 @@ export async function logData(data: OutputData) {
     }
   });
 
-  console.log(`apitally:${await gzipBase64(data)}`);
+  let msg = `apitally:${await gzipBase64(data)}`;
+  if (msg.length > 15_000) {
+    // Cloudflare Workers Logpush limits the total length of all exception and log messages to 16,384 characters,
+    // so we need to keep the logged message well below that limit.
+    data.request.body = undefined;
+    data.response.body = undefined;
+    msg = `apitally:${await gzipBase64(data)}`;
+  }
+  console.log(msg);
 }
