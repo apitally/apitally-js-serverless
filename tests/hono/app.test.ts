@@ -1,5 +1,14 @@
 import { Hono } from "hono";
-import { afterEach, beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  Mock,
+  vi,
+} from "vitest";
 
 import { getLoggedData, wait } from "../utils.js";
 import { getApp } from "./app.js";
@@ -8,22 +17,26 @@ describe("Middleware for Hono", () => {
   let app: Hono;
   let consoleLogSpy: Mock;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     app = await getApp();
+  });
+
+  beforeEach(() => {
     consoleLogSpy = vi.spyOn(console, "log");
   });
 
-  it("Request logging", async () => {
-    let res;
-    let loggedData;
+  afterEach(() => {
+    consoleLogSpy.mockRestore();
+  });
 
-    res = await app.request("/hello?name=John&age=20");
+  it("Logs GET request", async () => {
+    const res = await app.request("/hello?name=John&age=20");
     await res.text();
     expect(res.status).toBe(200);
 
     await wait();
 
-    loggedData = await getLoggedData(consoleLogSpy);
+    const loggedData = await getLoggedData(consoleLogSpy);
     expect(loggedData).toBeDefined();
     expect(loggedData.instanceUuid).toBeDefined();
     expect(loggedData.requestUuid).toBeDefined();
@@ -36,10 +49,23 @@ describe("Middleware for Hono", () => {
     expect(Buffer.from(loggedData.response.body, "base64").toString()).toMatch(
       /^Hello John!/,
     );
-    consoleLogSpy.mockClear();
+  });
 
+  it("Logs GET request with param", async () => {
+    const res = await app.request("/hello/123");
+    await res.text();
+    expect(res.status).toBe(200);
+
+    await wait();
+
+    const loggedData = await getLoggedData(consoleLogSpy);
+    expect(loggedData).toBeDefined();
+    expect(loggedData.request.path).toBe("/hello/:id");
+  });
+
+  it("Logs POST request with JSON body", async () => {
     const body = JSON.stringify({ name: "John", age: 20 });
-    res = await app.request("/hello", {
+    const res = await app.request("/hello", {
       method: "POST",
       body,
       headers: {
@@ -52,7 +78,7 @@ describe("Middleware for Hono", () => {
 
     await wait();
 
-    loggedData = await getLoggedData(consoleLogSpy);
+    const loggedData = await getLoggedData(consoleLogSpy);
     expect(loggedData).toBeDefined();
     expect(loggedData.request.path).toBe("/hello");
     expect(loggedData.request.headers).toHaveLength(2);
@@ -64,21 +90,17 @@ describe("Middleware for Hono", () => {
     expect(Buffer.from(loggedData.request.body, "base64").toString()).toMatch(
       /^{"name":"John","age":20}$/,
     );
-    consoleLogSpy.mockClear();
+  });
 
-    res = await app.request("/error");
+  it("Logs error response", async () => {
+    const res = await app.request("/error");
     await res.text();
     expect(res.status).toBe(500);
 
     await wait();
 
-    loggedData = await getLoggedData(consoleLogSpy);
+    const loggedData = await getLoggedData(consoleLogSpy);
     expect(loggedData).toBeDefined();
     expect(loggedData.request.path).toBe("/error");
-    consoleLogSpy.mockClear();
-  });
-
-  afterEach(() => {
-    consoleLogSpy.mockRestore();
   });
 });

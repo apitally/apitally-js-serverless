@@ -1,14 +1,14 @@
 import { MockInstance } from "vitest";
 
 export async function getLoggedData(logMock: MockInstance<typeof console.log>) {
-  const logMessage = logMock.mock.calls.find((call) =>
+  const msg = logMock.mock.calls.find((call) =>
     call[0].startsWith("apitally:"),
   )?.[0];
-  if (!logMessage) {
+  if (!msg) {
     return undefined;
   }
 
-  const binaryString = atob(logMessage.replace("apitally:", ""));
+  const binaryString = atob(msg.replace("apitally:", ""));
   const compressed = Uint8Array.from(
     binaryString.split("").map((char) => char.charCodeAt(0)),
   );

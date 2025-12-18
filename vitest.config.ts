@@ -4,6 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [swc.vite(), swc.rollup()],
   test: {
+    isolate: false,
     coverage: {
       enabled: true,
       include: ["src/**/*"],
