@@ -62,15 +62,18 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         };
       }
 
+      const consumer = getConsumer(c);
       const data = {
         instanceUuid,
         requestUuid: crypto.randomUUID(),
         startup: startupData,
+        consumer: typeof consumer === "object" ? consumer : undefined,
         request: {
           path: c.req.routePath,
           headers: convertHeaders(c.req.header()),
           size: requestSize,
-          consumer: getConsumer(c),
+          consumer:
+            typeof consumer === "object" ? consumer.identifier : consumer,
           body: requestBody,
         },
         response: {

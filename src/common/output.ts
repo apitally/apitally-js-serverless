@@ -3,6 +3,7 @@ import { ApitallyConsumer } from "./consumers.js";
 export type OutputData = {
   instanceUuid: string;
   requestUuid: string;
+  consumer?: ApitallyConsumer;
   startup?: {
     paths: { method: string; path: string }[];
     versions: Record<string, string>;
@@ -12,7 +13,7 @@ export type OutputData = {
     path: string;
     headers?: [string, string][];
     size?: number;
-    consumer?: ApitallyConsumer | string | null;
+    consumer?: string | null;
     body?: Buffer;
   };
   response: {
