@@ -77,7 +77,7 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
           body: requestBody,
         },
         response: {
-          responseTime,
+          responseTime: responseTime / 1000,
           headers: convertHeaders(responseHeaders),
           size: responseSize,
           body: responseBody,
