@@ -6,7 +6,7 @@ import {
   describe,
   expect,
   it,
-  Mock,
+  MockInstance,
   vi,
 } from "vitest";
 
@@ -16,10 +16,10 @@ import { getApp } from "./app.js";
 
 describe("Middleware for Hono", () => {
   let app: Hono;
-  let consoleLogSpy: Mock;
+  let consoleLogSpy: MockInstance;
 
-  beforeAll(async () => {
-    app = await getApp();
+  beforeAll(() => {
+    app = getApp();
   });
 
   beforeEach(() => {

@@ -18,7 +18,12 @@ export function concatBytes(arrays: Uint8Array[]): Uint8Array {
 }
 
 export function bytesToBase64(bytes: Uint8Array): string {
-  return btoa(String.fromCharCode(...bytes));
+  const chunks: string[] = [];
+  const chunkSize = 0x1000; // 4096 bytes
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    chunks.push(String.fromCharCode(...bytes.subarray(i, i + chunkSize)));
+  }
+  return btoa(chunks.join(""));
 }
 
 export function base64ToBytes(base64: string): Uint8Array {

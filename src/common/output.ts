@@ -34,7 +34,7 @@ async function gzipBase64(json: string) {
   writer.close();
 
   const compressed = await new Response(gzipStream.readable).arrayBuffer();
-  return btoa(String.fromCharCode(...new Uint8Array(compressed)));
+  return bytesToBase64(new Uint8Array(compressed));
 }
 
 async function createLogMessage(data: OutputData) {

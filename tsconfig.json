@@ -2,14 +2,10 @@
   "include": ["src", "tests"],
   "compilerOptions": {
     "module": "NodeNext",
-    "esModuleInterop": true,
     "outDir": "./dist/tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "allowJs": true,
-    "isolatedModules": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "isolatedModules": true
   }
 }

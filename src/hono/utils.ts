@@ -36,6 +36,7 @@ export function tryWaitUntil(c: Context, promise: Promise<unknown>) {
   try {
     c.executionCtx.waitUntil(promise);
   } catch (error) {
-    // ignore
+    // Execution context is only available in Cloudflare Workers,
+    // but not on other platforms or in unit tests.
   }
 }

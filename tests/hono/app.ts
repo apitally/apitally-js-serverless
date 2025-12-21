@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { setConsumer, useApitally } from "../../src/hono/index.js";
 
-export const getApp = async () => {
+export const getApp = () => {
   const app = new Hono();
 
   useApitally(app, {

@@ -2,9 +2,8 @@ import swc from "unplugin-swc";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [swc.vite(), swc.rollup()],
+  plugins: [swc.vite()],
   test: {
-    isolate: false,
     coverage: {
       enabled: true,
       include: ["src/**/*"],
