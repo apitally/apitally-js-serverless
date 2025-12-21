@@ -1,0 +1,77 @@
+{
+  "name": "@apitally/serverless",
+  "version": "1.0.0",
+  "description": "Simple API monitoring & analytics for REST APIs running on serverless platforms (e.g. Cloudflare Workers).",
+  "author": "Apitally <hello@apitally.io>",
+  "license": "MIT",
+  "keywords": [
+    "analytics",
+    "api",
+    "apitally",
+    "cloudflare",
+    "cloudflare-workers",
+    "hono",
+    "logging",
+    "metrics",
+    "middleware",
+    "monitor",
+    "monitoring",
+    "plugin",
+    "rest",
+    "restful",
+    "serverless",
+    "workers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/apitally/apitally-js-serverless.git"
+  },
+  "bugs": {
+    "url": "https://github.com/apitally/apitally-js-serverless/issues"
+  },
+  "homepage": "https://apitally.io",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "format": "prettier --write .",
+    "check": "tsc --noEmit && eslint src tests && prettier --check .",
+    "test": "vitest"
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    "./hono": {
+      "types": "./dist/hono/index.d.ts",
+      "import": "./dist/hono/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "prettier": {
+    "printWidth": 80
+  },
+  "peerDependencies": {
+    "hono": "^4"
+  },
+  "peerDependenciesMeta": {
+    "hono": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@hono/zod-validator": "^0.7.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "eslint": "^9.0.0",
+    "hono": "^4.6.5",
+    "prettier": "^3.1.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.34.0",
+    "unplugin-swc": "^1.5.1",
+    "vitest": "^4.0.0",
+    "zod": "^3.23.8"
+  }
+}
