@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  bytesToString,
-  stringToBytes,
-} from "../../src/common/bytes.js";
+import { bytesToString, stringToBytes } from "../../src/common/bytes.js";
 import { ApitallyConfig } from "../../src/common/config.js";
 import DataMasker from "../../src/common/masking.js";
 import { OutputData } from "../../src/common/output.js";
