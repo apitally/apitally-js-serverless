@@ -27,6 +27,6 @@ export async function getLoggedData(logMock: MockInstance<typeof console.log>) {
   return JSON.parse(jsonString);
 }
 
-export async function wait(ms: number = 20) {
+export async function wait(ms: number = 100) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
