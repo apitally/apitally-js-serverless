@@ -10,7 +10,7 @@ const SUPPORTED_CONTENT_TYPES = [
 
 export function convertHeaders(
   headers?: Headers | Record<string, string | string[] | number | undefined>,
-) {
+): [string, string][] {
   if (!headers) {
     return [];
   }

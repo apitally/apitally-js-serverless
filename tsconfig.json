@@ -1,7 +1,10 @@
 {
   "include": ["src", "tests"],
   "compilerOptions": {
-    "module": "NodeNext",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "outDir": "./dist/tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
