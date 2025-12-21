@@ -1,3 +1,4 @@
+import { bytesToString, stringToBytes } from "./bytes.js";
 import { ApitallyConfig } from "./config.js";
 import { OutputData } from "./output.js";
 
@@ -112,12 +113,11 @@ export default class DataMasker {
           ([k]) => k.toLowerCase() === "content-type",
         )?.[1];
         if (!contentType || /\bjson\b/i.test(contentType)) {
-          const parsedBody = JSON.parse(bodyData.toString());
+          const parsedBody = JSON.parse(bytesToString(bodyData));
           const maskedBody = this.maskBody(parsedBody);
-          data[key].body = Buffer.from(JSON.stringify(maskedBody));
+          data[key].body = stringToBytes(JSON.stringify(maskedBody));
         } else if (/\bndjson\b/i.test(contentType)) {
-          const lines = bodyData
-            .toString()
+          const lines = bytesToString(bodyData)
             .split("\n")
             .filter((line) => line.trim());
           const maskedLines = lines.map((line) => {
@@ -129,7 +129,7 @@ export default class DataMasker {
               return line;
             }
           });
-          data[key].body = Buffer.from(maskedLines.join("\n"));
+          data[key].body = stringToBytes(maskedLines.join("\n"));
         }
       } catch {
         // If parsing fails, leave body as is

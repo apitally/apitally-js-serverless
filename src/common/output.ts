@@ -1,3 +1,4 @@
+import { bytesToBase64 } from "./bytes.js";
 import { ApitallyConsumer } from "./consumers.js";
 
 export type OutputData = {
@@ -14,13 +15,13 @@ export type OutputData = {
     headers?: [string, string][];
     size?: number;
     consumer?: string | null;
-    body?: Buffer;
+    body?: Uint8Array;
   };
   response: {
     responseTime: number;
     headers?: [string, string][];
     size?: number;
-    body?: Buffer;
+    body?: Uint8Array;
   };
   exclude?: boolean;
 };
@@ -39,9 +40,8 @@ async function gzipBase64(json: string) {
 async function createLogMessage(data: OutputData) {
   [data.request?.body, data.response?.body].forEach((body) => {
     if (body) {
-      // @ts-expect-error Override Buffer's default JSON serialization
-      body.toJSON = function () {
-        return this.toString("base64");
+      (body as any).toJSON = function () {
+        return bytesToBase64(this);
       };
     }
   });

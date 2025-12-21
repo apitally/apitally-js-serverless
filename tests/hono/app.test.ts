@@ -10,6 +10,7 @@ import {
   vi,
 } from "vitest";
 
+import { base64ToBytes, bytesToString } from "../../src/common/bytes.js";
 import { getLoggedData, wait } from "../utils.js";
 import { getApp } from "./app.js";
 
@@ -46,7 +47,7 @@ describe("Middleware for Hono", () => {
       "text/plain;charset=UTF-8",
     ]);
     expect(loggedData.response.size).toBeGreaterThan(10);
-    expect(Buffer.from(loggedData.response.body, "base64").toString()).toMatch(
+    expect(bytesToString(base64ToBytes(loggedData.response.body))).toMatch(
       /^Hello John!/,
     );
   });
@@ -87,7 +88,7 @@ describe("Middleware for Hono", () => {
       "application/json",
     ]);
     expect(loggedData.request.size).toBe(body.length);
-    expect(Buffer.from(loggedData.request.body, "base64").toString()).toMatch(
+    expect(bytesToString(base64ToBytes(loggedData.request.body))).toMatch(
       /^{"name":"John","age":20}$/,
     );
   });

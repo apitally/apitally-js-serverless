@@ -1,3 +1,5 @@
+import { concatBytes, stringToBytes } from "./bytes.js";
+
 type CaptureResponseOptions = {
   captureBody: boolean;
   maxBodySize: number;
@@ -5,7 +7,7 @@ type CaptureResponseOptions = {
 };
 
 export type CapturedResponse = {
-  body?: Buffer;
+  body?: Uint8Array;
   size: number;
   completed: boolean;
   error?: Error;
@@ -55,9 +57,9 @@ export function captureResponse(
     .then(() => ({
       body:
         chunks.length > 0
-          ? Buffer.concat(chunks)
+          ? concatBytes(chunks)
           : bodySizeLimitExceeded
-            ? Buffer.from("<body too large>")
+            ? stringToBytes("<body too large>")
             : undefined,
       size,
       completed: true,

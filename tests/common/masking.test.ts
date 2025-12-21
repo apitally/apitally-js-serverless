@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import {
+  bytesToString,
+  stringToBytes,
+} from "../../src/common/bytes.js";
 import { ApitallyConfig } from "../../src/common/config.js";
 import DataMasker from "../../src/common/masking.js";
 import { OutputData } from "../../src/common/output.js";
@@ -22,12 +26,12 @@ const createOutputData = (overrides?: Partial<OutputData>): OutputData => ({
   request: {
     path: "/test",
     headers: [["content-type", "application/json"]],
-    body: Buffer.from('{"username":"john"}'),
+    body: stringToBytes('{"username":"john"}'),
   },
   response: {
     responseTime: 0.1,
     headers: [["content-type", "application/json"]],
-    body: Buffer.from('{"status":"ok"}'),
+    body: stringToBytes('{"status":"ok"}'),
   },
   ...overrides,
 });
@@ -116,13 +120,13 @@ describe("Data masker", () => {
       request: {
         path: "/test",
         headers: [["content-type", "application/json"]],
-        body: Buffer.from(JSON.stringify(requestBody)),
+        body: stringToBytes(JSON.stringify(requestBody)),
       },
     });
 
     masker.applyMasking(data);
 
-    const masked = JSON.parse(data.request.body!.toString());
+    const masked = JSON.parse(bytesToString(data.request.body!));
     expect(masked.username).toBe("john");
     expect(masked.password).toBe("******");
     expect(masked.custom).toBe("******");
@@ -141,14 +145,13 @@ describe("Data masker", () => {
       request: {
         path: "/test",
         headers: [["content-type", "application/x-ndjson"]],
-        body: Buffer.from(lines.map((l) => JSON.stringify(l)).join("\n")),
+        body: stringToBytes(lines.map((l) => JSON.stringify(l)).join("\n")),
       },
     });
 
     masker.applyMasking(data);
 
-    const masked = data.request
-      .body!.toString()
+    const masked = bytesToString(data.request.body!)
       .split("\n")
       .map((l) => JSON.parse(l));
     expect(masked[0].username).toBe("john");
@@ -163,12 +166,12 @@ describe("Data masker", () => {
       request: {
         path: "/test",
         headers: [["content-type", "text/plain"]],
-        body: Buffer.from(body),
+        body: stringToBytes(body),
       },
     });
 
     masker.applyMasking(data);
 
-    expect(data.request.body!.toString()).toBe(body);
+    expect(bytesToString(data.request.body!)).toBe(body);
   });
 });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { bytesToString, stringToBytes } from "../../src/common/bytes.js";
 import { captureResponse } from "../../src/common/response.js";
 
 describe("Response utils", () => {
@@ -14,7 +15,7 @@ describe("Response utils", () => {
     const responseText = await newResponse.text();
     const capturedResponse = await promise;
     expect(responseText).toBe(body);
-    expect(capturedResponse.body).toEqual(Buffer.from(body));
+    expect(capturedResponse.body).toEqual(stringToBytes(body));
     expect(capturedResponse.size).toBe(body.length);
     expect(capturedResponse.completed).toBe(true);
   });
@@ -30,7 +31,7 @@ describe("Response utils", () => {
     const responseText = await newResponse.text();
     const capturedResponse = await promise;
     expect(responseText).toBe(body);
-    expect(capturedResponse.body?.toString()).toBe("<body too large>");
+    expect(bytesToString(capturedResponse.body!)).toBe("<body too large>");
     expect(capturedResponse.size).toBe(body.length);
   });
 });

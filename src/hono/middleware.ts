@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { MiddlewareHandler } from "hono/types";
 
+import { stringToBytes } from "../common/bytes.js";
 import { ApitallyConfig, mergeConfigWithDefaults } from "../common/config.js";
 import {
   convertHeaders,
@@ -41,8 +42,8 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         requestSize &&
         isSupportedContentType(requestContentType)
           ? requestSize <= 10_000
-            ? Buffer.from(await c.req.arrayBuffer())
-            : Buffer.from("<body too large>")
+            ? new Uint8Array(await c.req.arrayBuffer())
+            : stringToBytes("<body too large>")
           : undefined;
       const responseSize = capturedResponse.completed
         ? capturedResponse.size
