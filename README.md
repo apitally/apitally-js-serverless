@@ -16,7 +16,7 @@
 # Apitally SDK for serverless JavaScript runtimes
 
 [![Tests](https://github.com/apitally/apitally-js-serverless/actions/workflows/tests.yaml/badge.svg?event=push)](https://github.com/apitally/apitally-js-serverless/actions)
-[![Codecov](https://codecov.io/gh/apitally/apitally-js-serverless/graph/badge.svg?token=j5jqlrL7Pd)](https://codecov.io/gh/apitally/apitally-js-serverless)
+[![Codecov](https://codecov.io/gh/apitally/apitally-js-serverless/graph/badge.svg?token=sFIDRfSfca)](https://codecov.io/gh/apitally/apitally-js-serverless)
 [![npm](https://img.shields.io/npm/v/@apitally/serverless?logo=npm&color=%23cb0000)](https://www.npmjs.com/package/@apitally/serverless)
 
 This SDK for Apitally currently supports the following web frameworks:

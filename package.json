@@ -1,13 +1,15 @@
 {
   "name": "@apitally/serverless",
   "version": "1.0.0",
-  "description": "Simple API monitoring & analytics for REST APIs built with Hono and running on serverless platforms like Cloudflare Workers.",
+  "description": "Simple API monitoring & analytics for REST APIs running on serverless platforms (e.g. Cloudflare Workers).",
   "author": "Apitally <hello@apitally.io>",
   "license": "MIT",
   "keywords": [
     "analytics",
     "api",
     "apitally",
+    "cloudflare",
+    "cloudflare-workers",
     "hono",
     "logging",
     "metrics",
@@ -16,7 +18,9 @@
     "monitoring",
     "plugin",
     "rest",
-    "restful"
+    "restful",
+    "serverless",
+    "workers"
   ],
   "repository": {
     "type": "git",
