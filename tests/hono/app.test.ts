@@ -47,6 +47,7 @@ describe("Middleware for Hono", () => {
       "text/plain;charset=UTF-8",
     ]);
     expect(loggedData.response.size).toBeGreaterThan(10);
+    expect(loggedData.response.body).toBeDefined();
     expect(bytesToString(base64ToBytes(loggedData.response.body))).toMatch(
       /^Hello John!/,
     );
@@ -88,6 +89,7 @@ describe("Middleware for Hono", () => {
       "application/json",
     ]);
     expect(loggedData.request.size).toBe(body.length);
+    expect(loggedData.request.body).toBeDefined();
     expect(bytesToString(base64ToBytes(loggedData.request.body))).toMatch(
       /^{"name":"John","age":20}$/,
     );
