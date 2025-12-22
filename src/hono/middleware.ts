@@ -9,10 +9,15 @@ import {
   parseContentLength,
 } from "../common/headers.js";
 import DataMasker from "../common/masking.js";
-import { logData } from "../common/output.js";
-import { captureResponse } from "../common/response.js";
+import { logData, OutputData, ValidationError } from "../common/output.js";
+import { captureResponse, getResponseJson } from "../common/response.js";
 import { VERSION } from "../common/version.js";
-import { getConsumer, listEndpoints, tryWaitUntil } from "./utils.js";
+import {
+  extractZodErrors,
+  getConsumer,
+  listEndpoints,
+  tryWaitUntil,
+} from "./utils.js";
 
 export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
   const mergedConfig = mergeConfigWithDefaults(config);
@@ -25,12 +30,15 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
 
     await next();
 
+    const maybeValidationErrors =
+      c.res.status === 400 &&
+      c.res.headers.get("content-type") === "application/json";
     const [newResponse, responsePromise] = captureResponse(c.res, {
       captureBody:
-        mergedConfig.logResponseBody &&
-        isSupportedContentType(c.res.headers.get("content-type")),
+        (mergedConfig.logResponseBody &&
+          isSupportedContentType(c.res.headers.get("content-type"))) ||
+        maybeValidationErrors,
     });
-    const responseHeaders = newResponse.headers;
     c.res = newResponse;
 
     const loggingPromise = responsePromise.then(async (capturedResponse) => {
@@ -63,8 +71,14 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         };
       }
 
+      let validationErrors: ValidationError[] | undefined;
+      if (c.res.status === 400 && capturedResponse.body) {
+        const responseJson = getResponseJson(capturedResponse.body);
+        validationErrors = extractZodErrors(responseJson);
+      }
+
       const consumer = getConsumer(c);
-      const data = {
+      const data: OutputData = {
         instanceUuid,
         requestUuid: crypto.randomUUID(),
         startup: startupData,
@@ -79,10 +93,11 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         },
         response: {
           responseTime: responseTime / 1000,
-          headers: convertHeaders(responseHeaders),
+          headers: convertHeaders(c.res.headers),
           size: responseSize,
           body: responseBody,
         },
+        validationErrors,
       };
 
       masker.applyMasking(data);

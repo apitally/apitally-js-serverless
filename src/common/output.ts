@@ -1,6 +1,12 @@
 import { bytesToBase64 } from "./bytes.js";
 import { ApitallyConsumer } from "./consumers.js";
 
+export type ValidationError = {
+  loc: string;
+  msg: string;
+  type: string;
+};
+
 export type OutputData = {
   instanceUuid: string;
   requestUuid: string;
@@ -23,6 +29,7 @@ export type OutputData = {
     size?: number;
     body?: Uint8Array;
   };
+  validationErrors?: ValidationError[];
   exclude?: boolean;
 };
 

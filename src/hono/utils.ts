@@ -1,9 +1,12 @@
 import { Context, Hono } from "hono";
 import { isMiddleware } from "hono/utils/handler";
+import type { ZodError } from "zod";
+
 import {
   ApitallyConsumer,
   consumerFromStringOrObject,
 } from "../common/consumers.js";
+import { ValidationError } from "../common/output.js";
 
 export function listEndpoints(app: Hono) {
   const endpoints: Array<{ method: string; path: string }> = [];
@@ -38,5 +41,29 @@ export function tryWaitUntil(c: Context, promise: Promise<unknown>) {
   } catch (error) {
     // Execution context is only available in Cloudflare Workers,
     // but not on other platforms or in unit tests.
+  }
+}
+
+export function extractZodErrors(responseJson: any) {
+  try {
+    const errors: ValidationError[] = [];
+    if (
+      responseJson &&
+      responseJson.success === false &&
+      responseJson.error &&
+      responseJson.error.name === "ZodError"
+    ) {
+      const zodError = responseJson.error as ZodError;
+      zodError.issues?.forEach((zodIssue) => {
+        errors.push({
+          loc: zodIssue.path.join("."),
+          msg: zodIssue.message,
+          type: zodIssue.code,
+        });
+      });
+    }
+    return errors;
+  } catch (error) {
+    return [];
   }
 }

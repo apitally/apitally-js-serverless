@@ -104,4 +104,26 @@ describe("Middleware for Hono", () => {
     expect(loggedData).toBeDefined();
     expect(loggedData.request.path).toBe("/error");
   });
+
+  it("Captures Zod validation errors", async () => {
+    const res = await app.request("/hello?name=X&age=17");
+    await res.text();
+    expect(res.status).toBe(400);
+
+    await wait();
+
+    const loggedData = await getLoggedData(consoleLogSpy);
+    expect(loggedData).toBeDefined();
+    expect(loggedData.validationErrors).toHaveLength(2);
+    expect(loggedData.validationErrors).toContainEqual({
+      loc: "name",
+      msg: expect.any(String),
+      type: "too_small",
+    });
+    expect(loggedData.validationErrors).toContainEqual({
+      loc: "age",
+      msg: expect.any(String),
+      type: "too_small",
+    });
+  });
 });
