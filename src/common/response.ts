@@ -1,4 +1,4 @@
-import { concatBytes, stringToBytes } from "./bytes.js";
+import { bytesToString, concatBytes, stringToBytes } from "./bytes.js";
 
 type CaptureResponseOptions = {
   captureBody: boolean;
@@ -91,4 +91,15 @@ export function captureResponse(
   void newResponse.headers;
 
   return [newResponse, racePromise];
+}
+
+export function getResponseJson(body: Uint8Array) {
+  if (body.length === 0) {
+    return null;
+  }
+  try {
+    return JSON.parse(bytesToString(body));
+  } catch (error) {
+    return null;
+  }
 }
