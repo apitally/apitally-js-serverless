@@ -56,7 +56,7 @@ export function extractZodErrors(responseJson: any) {
       const zodError = responseJson.error as ZodError;
       zodError.issues?.forEach((zodIssue) => {
         errors.push({
-          loc: zodIssue.path.join("."),
+          loc: zodIssue.path.map((p) => p.toString()),
           msg: zodIssue.message,
           type: zodIssue.code,
         });

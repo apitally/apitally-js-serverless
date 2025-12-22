@@ -116,12 +116,12 @@ describe("Middleware for Hono", () => {
     expect(loggedData).toBeDefined();
     expect(loggedData.validationErrors).toHaveLength(2);
     expect(loggedData.validationErrors).toContainEqual({
-      loc: "name",
+      loc: ["name"],
       msg: expect.any(String),
       type: "too_small",
     });
     expect(loggedData.validationErrors).toContainEqual({
-      loc: "age",
+      loc: ["age"],
       msg: expect.any(String),
       type: "too_small",
     });

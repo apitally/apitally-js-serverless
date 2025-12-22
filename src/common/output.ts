@@ -2,7 +2,7 @@ import { bytesToBase64 } from "./bytes.js";
 import { ApitallyConsumer } from "./consumers.js";
 
 export type ValidationError = {
-  loc: string;
+  loc: string[];
   msg: string;
   type: string;
 };
