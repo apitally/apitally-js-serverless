@@ -30,6 +30,11 @@ export type OutputData = {
     body?: Uint8Array;
   };
   validationErrors?: ValidationError[];
+  exception?: {
+    type: string;
+    msg: string;
+    stackTrace: string;
+  };
   exclude?: boolean;
 };
 
