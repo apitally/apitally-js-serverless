@@ -4,6 +4,10 @@ import { MiddlewareHandler } from "hono/types";
 import { stringToBytes } from "../common/bytes.js";
 import { ApitallyConfig, mergeConfigWithDefaults } from "../common/config.js";
 import {
+  truncateExceptionMessage,
+  truncateExceptionStackTrace,
+} from "../common/exceptions.js";
+import {
   convertHeaders,
   isSupportedContentType,
   parseContentLength,
@@ -98,6 +102,14 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
           body: responseBody,
         },
         validationErrors,
+        exception:
+          c.res.status === 500 && c.error
+            ? {
+                type: c.error.name,
+                msg: truncateExceptionMessage(c.error.message),
+                stackTrace: truncateExceptionStackTrace(c.error.stack ?? ""),
+              }
+            : undefined,
       };
 
       masker.applyMasking(data);

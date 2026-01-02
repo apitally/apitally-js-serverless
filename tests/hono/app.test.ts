@@ -105,6 +105,10 @@ describe("Middleware for Hono", () => {
     const loggedData = await getLoggedData(consoleLogSpy);
     expect(loggedData).toBeDefined();
     expect(loggedData.request.path).toBe("/error");
+    expect(loggedData.exception).toBeDefined();
+    expect(loggedData.exception.type).toBe("Error");
+    expect(loggedData.exception.msg).toBe("test");
+    expect(loggedData.exception.stackTrace).toContain("tests/hono/app.ts");
   });
 
   it("Captures Zod validation errors", async () => {
