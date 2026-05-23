@@ -60,7 +60,13 @@
       "optional": true
     }
   },
+  "overrides": {
+    "@arethetypeswrong/cli": {
+      "fflate": "0.8.2"
+    }
+  },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@eslint/js": "^9.29.0",
     "@hono/zod-validator": "^0.7.0",
     "@vitest/coverage-v8": "^4.0.0",

@@ -1,4 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>apitally/renovate-config"]
+  "extends": ["github>apitally/renovate-config"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["fflate"],
+      "enabled": false,
+      "description": "Pinned to 0.8.2 to work around @arethetypeswrong/cli crash, see https://github.com/arethetypeswrong/arethetypeswrong.github.io/issues/262"
+    }
+  ]
 }
