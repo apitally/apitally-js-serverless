@@ -1,5 +1,5 @@
 import { bytesToBase64 } from "./bytes.js";
-import { ApitallyConsumer } from "./consumers.js";
+import type { ApitallyConsumer } from "./consumers.js";
 
 export type ValidationError = {
   loc: string[];

@@ -1,6 +1,6 @@
 import { bytesToString, stringToBytes } from "./bytes.js";
-import { ApitallyConfig } from "./config.js";
-import { OutputData } from "./output.js";
+import type { ApitallyConfig } from "./config.js";
+import type { OutputData } from "./output.js";
 
 const MASKED = "******";
 const EXCLUDE_PATH_PATTERNS = [

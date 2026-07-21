@@ -1,12 +1,12 @@
-import { Context, Hono } from "hono";
+import type { Context, Hono } from "hono";
 import { isMiddleware } from "hono/utils/handler";
 import type { ZodError } from "zod";
 
 import {
-  ApitallyConsumer,
+  type ApitallyConsumer,
   consumerFromStringOrObject,
 } from "../common/consumers.js";
-import { ValidationError } from "../common/output.js";
+import type { ValidationError } from "../common/output.js";
 
 export function listEndpoints(app: Hono) {
   const endpoints: Array<{ method: string; path: string }> = [];
@@ -38,7 +38,7 @@ export function getConsumer(c: Context) {
 export function tryWaitUntil(c: Context, promise: Promise<unknown>) {
   try {
     c.executionCtx.waitUntil(promise);
-  } catch (error) {
+  } catch {
     // Execution context is only available in Cloudflare Workers,
     // but not on other platforms or in unit tests.
   }
@@ -63,7 +63,7 @@ export function extractZodErrors(responseJson: any) {
       });
     }
     return errors;
-  } catch (error) {
+  } catch {
     return [];
   }
 }
