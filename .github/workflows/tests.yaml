@@ -3,21 +3,28 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - .gitignore
-      - LICENSE
-      - README.md
   pull_request:
-    paths-ignore:
-      - .gitignore
-      - LICENSE
-      - README.md
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      node: ${{ steps.filter.outputs.node }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        id: filter
+        with:
+          filters: |
+            node:
+              - '!(.gitignore|LICENSE|README.md)'
+
   check-attw:
+    needs: changes
+    if: needs.changes.outputs.node == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -33,6 +40,8 @@ jobs:
         run: npx -p @arethetypeswrong/cli attw --pack --profile esm-only .
 
   test-coverage:
+    needs: changes
+    if: needs.changes.outputs.node == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -54,6 +63,7 @@ jobs:
 
   ci-gate:
     needs:
+      - changes
       - check-attw
       - test-coverage
     if: always()
