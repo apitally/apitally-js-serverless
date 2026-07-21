@@ -51,3 +51,16 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/
+
+  ci-gate:
+    needs:
+      - check-attw
+      - test-coverage
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: All checks passed or skipped
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" || "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            exit 1
+          fi
