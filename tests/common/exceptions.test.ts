@@ -13,8 +13,7 @@ describe("Exceptions utils", () => {
   });
 
   it("Truncate exception stack trace", () => {
-    const longStack =
-      "Error: test\n" + "    at someFunction (file.js:1:1)\n".repeat(3000);
+    const longStack = `Error: test\n${"    at someFunction (file.js:1:1)\n".repeat(3000)}`;
     const stackTrace = truncateExceptionStackTrace(longStack);
     expect(stackTrace.length).toBeLessThanOrEqual(65536);
     expect(stackTrace).toContain("(truncated)");

@@ -1,4 +1,4 @@
-import { MockInstance } from "vitest";
+import type { MockInstance } from "vitest";
 
 export async function getLoggedData(logMock: MockInstance<typeof console.log>) {
   const msg = logMock.mock.calls.find((call) =>

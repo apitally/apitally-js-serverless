@@ -38,8 +38,8 @@ export function parseContentLength(
     return contentLength;
   }
   if (typeof contentLength === "string") {
-    const parsed = parseInt(contentLength);
-    return isNaN(parsed) ? undefined : parsed;
+    const parsed = parseInt(contentLength, 10);
+    return Number.isNaN(parsed) ? undefined : parsed;
   }
   if (Array.isArray(contentLength)) {
     return parseContentLength(contentLength[0]);

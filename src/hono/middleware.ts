@@ -1,8 +1,11 @@
-import { Hono } from "hono";
-import { MiddlewareHandler } from "hono/types";
+import type { Hono } from "hono";
+import type { MiddlewareHandler } from "hono/types";
 
 import { stringToBytes } from "../common/bytes.js";
-import { ApitallyConfig, mergeConfigWithDefaults } from "../common/config.js";
+import {
+  type ApitallyConfig,
+  mergeConfigWithDefaults,
+} from "../common/config.js";
 import {
   truncateExceptionMessage,
   truncateExceptionStackTrace,
@@ -13,7 +16,11 @@ import {
   parseContentLength,
 } from "../common/headers.js";
 import DataMasker from "../common/masking.js";
-import { logData, OutputData, ValidationError } from "../common/output.js";
+import {
+  logData,
+  type OutputData,
+  type ValidationError,
+} from "../common/output.js";
 import { captureResponse, getResponseJson } from "../common/response.js";
 import { VERSION } from "../common/version.js";
 import {
@@ -62,7 +69,7 @@ export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
         : undefined;
       const responseBody = capturedResponse.body;
 
-      let startupData;
+      let startupData: OutputData["startup"];
       if (isFirstRequest) {
         isFirstRequest = false;
         instanceUuid = crypto.randomUUID();

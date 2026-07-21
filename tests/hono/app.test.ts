@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import type { Hono } from "hono";
 import {
   afterEach,
   beforeAll,
@@ -6,7 +6,7 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from "vitest";
 

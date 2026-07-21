@@ -99,7 +99,7 @@ export function getResponseJson(body: Uint8Array) {
   }
   try {
     return JSON.parse(bytesToString(body));
-  } catch (error) {
+  } catch {
     return null;
   }
 }
