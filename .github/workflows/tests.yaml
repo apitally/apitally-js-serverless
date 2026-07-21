@@ -4,9 +4,14 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   changes:
@@ -18,9 +23,13 @@ jobs:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
         id: filter
         with:
+          predicate-quantifier: 'every'
           filters: |
             node:
-              - '!(.gitignore|LICENSE|README.md)'
+              - '**'
+              - '!.gitignore'
+              - '!LICENSE'
+              - '!README.md'
 
   check-attw:
     needs: changes
