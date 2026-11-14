@@ -1,4 +1,3 @@
-import type { Hono } from "hono";
 import {
   afterEach,
   beforeAll,
@@ -15,7 +14,7 @@ import { getLoggedData, wait } from "../utils.js";
 import { getApp } from "./app.js";
 
 describe("Middleware for Hono", () => {
-  let app: Hono;
+  let app: ReturnType<typeof getApp>;
   let consoleLogSpy: MockInstance;
 
   beforeAll(() => {
