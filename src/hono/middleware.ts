@@ -1,5 +1,5 @@
 import type { Hono } from "hono";
-import type { MiddlewareHandler } from "hono/types";
+import type { Env, MiddlewareHandler } from "hono/types";
 
 import { stringToBytes } from "../common/bytes.js";
 import {
@@ -30,7 +30,10 @@ import {
   tryWaitUntil,
 } from "./utils.js";
 
-export function useApitally(app: Hono, config?: Partial<ApitallyConfig>) {
+export function useApitally<E extends Env>(
+  app: Hono<E>,
+  config?: Partial<ApitallyConfig>,
+) {
   const mergedConfig = mergeConfigWithDefaults(config);
   const masker = new DataMasker(mergedConfig);
   let isFirstRequest = true;

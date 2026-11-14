@@ -1,4 +1,5 @@
 import type { Context, Hono } from "hono";
+import type { Env } from "hono/types";
 import { isMiddleware } from "hono/utils/handler";
 import type { ZodError } from "zod";
 
@@ -8,7 +9,7 @@ import {
 } from "../common/consumers.js";
 import type { ValidationError } from "../common/output.js";
 
-export function listEndpoints(app: Hono) {
+export function listEndpoints<E extends Env>(app: Hono<E>) {
   const endpoints: Array<{ method: string; path: string }> = [];
   app.routes.forEach((route) => {
     if (

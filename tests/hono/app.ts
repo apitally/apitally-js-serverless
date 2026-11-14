@@ -6,7 +6,7 @@ import { z } from "zod";
 import { setConsumer, useApitally } from "../../src/hono/index.js";
 
 export const getApp = () => {
-  const app = new Hono();
+  const app = new Hono<{ Bindings: { APP_NAME: string } }>();
 
   useApitally(app, {
     enabled: true,
