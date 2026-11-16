@@ -63,7 +63,7 @@ uptime checks. Alert notifications can be delivered via email, Slack and Microso
 | ------------------------------------------ | ------------------ | --------------------------------------------------------------------- |
 | [**Hono**](https://github.com/honojs/hono) | `4.x`              | [Link](https://docs.apitally.io/setup-guides/hono-cloudflare-workers) |
 
-Apitally also supports many other web frameworks in [JavaScript](https://github.com/apitally/apitally-js), [Python](https://github.com/apitally/apitally-py), [Go](https://github.com/apitally/apitally-go), [.NET](https://github.com/apitally/apitally-dotnet) and [Java](https://github.com/apitally/apitally-java) via our other SDKs.
+Apitally also supports many other web frameworks in [JavaScript](https://github.com/apitally/apitally-js), [Python](https://github.com/apitally/apitally-py), [Go](https://github.com/apitally/apitally-go) and [.NET](https://github.com/apitally/apitally-dotnet) via our other SDKs.
 
 ## Getting started
 
